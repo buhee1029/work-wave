@@ -1,5 +1,6 @@
 package com.wanted.workwave.common.error;
 
+import com.wanted.workwave.user.exception.DuplicateUsernameException;
 import java.util.Arrays;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -9,7 +10,7 @@ import org.springframework.http.HttpStatus;
 @Getter
 @AllArgsConstructor
 public enum ErrorType {
-    U001("U001", "에러 메시지를 입력해주세여.", CustomException.class, HttpStatus.NOT_FOUND);
+    U001("U001", "중복된 계정입니다.", DuplicateUsernameException.class, HttpStatus.CONFLICT);
 
     private final String code;
     private final String message;
