@@ -1,5 +1,6 @@
 package com.wanted.workwave.user.domain;
 
+import com.wanted.workwave.user.exception.MismatchedPasswordException;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -8,6 +9,7 @@ import jakarta.persistence.Table;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Entity
 @Getter
@@ -30,5 +32,12 @@ public class User {
     public void changePassword(String password) {
         this.password = password;
     }
+
+    public void checkPasswordMatches(String password, PasswordEncoder passwordEncoder) {
+        if (!passwordEncoder.matches(password, this.getPassword())) {
+            throw new MismatchedPasswordException();
+        }
+    }
+
 
 }
