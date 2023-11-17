@@ -2,6 +2,9 @@ package com.wanted.workwave.common.error;
 
 import com.wanted.workwave.common.jwt.exception.ExpiredTokenException;
 import com.wanted.workwave.common.jwt.exception.MissingRequestHeaderAuthorizationException;
+import com.wanted.workwave.team.exception.AlreadyApprovedInviteException;
+import com.wanted.workwave.team.exception.InvalidInviteAccessException;
+import com.wanted.workwave.team.exception.NotFoundTeamInviteException;
 import com.wanted.workwave.team.exception.NotTeamLeaderException;
 import com.wanted.workwave.user.exception.DuplicateUsernameException;
 import com.wanted.workwave.user.exception.MismatchedPasswordException;
@@ -21,7 +24,11 @@ public enum ErrorType {
 
     T001("T001", "헤더에 토큰이 존재하지 않습니다.", MissingRequestHeaderAuthorizationException.class, HttpStatus.UNAUTHORIZED),
     T002("T002", "만료된 토큰입니다.", ExpiredTokenException.class, HttpStatus.UNAUTHORIZED),
-    T003("T003", "팀장만 팀월을 초대할 수 있습니다.", NotTeamLeaderException.class, HttpStatus.NOT_FOUND);
+
+    I001("I001", "팀장만 팀월을 초대할 수 있습니다.", NotTeamLeaderException.class, HttpStatus.NOT_FOUND),
+    I002("I002", "존재하지 않는 초대입니다.", NotFoundTeamInviteException.class, HttpStatus.NOT_FOUND),
+    I003("I003", "초대를 승낙할 수 없습니다.", InvalidInviteAccessException.class, HttpStatus.FORBIDDEN),
+    I004("I004", "이미 승인된 초대입니다.", AlreadyApprovedInviteException.class, HttpStatus.CONFLICT);
 
     private final String code;
     private final String message;

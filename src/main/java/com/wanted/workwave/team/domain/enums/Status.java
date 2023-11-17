@@ -5,7 +5,7 @@ import lombok.Getter;
 @Getter
 public enum Status {
     PENDING("대기"),
-    ACCEPTED("승인");
+    APPROVED("승인");
 
     private final String value;
 

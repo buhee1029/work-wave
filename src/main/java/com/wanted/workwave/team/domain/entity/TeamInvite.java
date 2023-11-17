@@ -41,4 +41,8 @@ public class TeamInvite {
                          .status(status)
                          .build();
     }
+
+    public void approveInvite() {
+        this.status = Status.APPROVED;
+    }
 }

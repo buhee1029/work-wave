@@ -12,6 +12,9 @@ import com.wanted.workwave.team.dto.request.TeamCreateRequest;
 import com.wanted.workwave.team.dto.request.TeamInviteRequest;
 import com.wanted.workwave.team.dto.response.TeamInfoResponse;
 import com.wanted.workwave.team.dto.response.TeamInviteResponse;
+import com.wanted.workwave.team.exception.AlreadyApprovedInviteException;
+import com.wanted.workwave.team.exception.InvalidInviteAccessException;
+import com.wanted.workwave.team.exception.NotFoundTeamInviteException;
 import com.wanted.workwave.team.exception.NotTeamLeaderException;
 import com.wanted.workwave.user.domain.User;
 import com.wanted.workwave.user.domain.UserRepository;
@@ -33,7 +36,8 @@ public class TeamService {
     public TeamInfoResponse createTeam(Long userId, TeamCreateRequest request) {
         Team team = teamRepository.save(request.toEntity());
         Long teamId = team.getId();
-        teamMemberRepository.save(TeamMember.createTeamMember(userId, teamId, Role.LEADER));
+        teamMemberRepository.save(TeamMember.createTeamMember(teamId, userId, Role.LEADER));
+
         return TeamInfoResponse.from(team);
     }
 
@@ -48,6 +52,18 @@ public class TeamService {
         return TeamInviteResponse.from(invite, user);
     }
 
+    @Transactional
+    public void approveInvite(Long userId, Long inviteId) {
+        TeamInvite invite = findTeamInvite(inviteId);
+
+        validateUserAccess(userId, invite);
+        validateInviteNotAlreadyApproved(invite);
+
+        invite.approveInvite();
+
+        teamMemberRepository.save(TeamMember.createTeamMember(invite.getTeamId(), userId, Role.MEMBER));
+    }
+
     private void isTeamLeader(Long teamId, Long userId) {
         boolean isTeamLeader = teamMemberRepository.existsByTeamIdAndUserIdAndRole(teamId, userId, Role.LEADER);
         if (!isTeamLeader) {
@@ -58,5 +74,22 @@ public class TeamService {
     private User findUser(String username) {
         return userRepository.findByUsername(username)
                              .orElseThrow(NotFoundUsernameException::new);
+    }
+
+    private TeamInvite findTeamInvite(Long inviteId) {
+        return teamInviteRepository.findById(inviteId)
+                                   .orElseThrow(NotFoundTeamInviteException::new);
+    }
+
+    private void validateUserAccess(Long userId, TeamInvite invite) {
+        if (!invite.getUserId().equals(userId)) {
+            throw new InvalidInviteAccessException();
+        }
+    }
+
+    private void validateInviteNotAlreadyApproved(TeamInvite invite) {
+        if (invite.getStatus().equals(Status.APPROVED)) {
+            throw new AlreadyApprovedInviteException();
+        }
     }
 }
