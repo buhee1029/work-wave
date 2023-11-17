@@ -1,6 +1,6 @@
 package com.wanted.workwave.team.domain.entity;
 
-import com.wanted.workwave.team.domain.enums.Role;
+import com.wanted.workwave.team.domain.enums.Status;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -15,8 +15,8 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor
-@Table(name = "team_members")
-public class TeamMember {
+@Table(name = "team_invites")
+public class TeamInvite {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,20 +25,20 @@ public class TeamMember {
     private Long userId;
 
     @Enumerated(EnumType.STRING)
-    private Role role;
+    private Status status;
 
     @Builder
-    public TeamMember(Long userId, Long teamId, Role role) {
-        this.userId = userId;
+    public TeamInvite(Long teamId, Long userId, Status status) {
         this.teamId = teamId;
-        this.role = role;
+        this.userId = userId;
+        this.status = status;
     }
 
-    public static TeamMember createTeamMember(Long teamId, Long userId, Role role) {
-        return TeamMember.builder()
+    public static TeamInvite createTeamInvite(Long teamId, Long userId, Status status) {
+        return TeamInvite.builder()
                          .teamId(teamId)
                          .userId(userId)
-                         .role(role)
+                         .status(status)
                          .build();
     }
 }
