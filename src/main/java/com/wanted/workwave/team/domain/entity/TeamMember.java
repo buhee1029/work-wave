@@ -6,6 +6,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -18,13 +19,22 @@ public class TeamMember {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Long userId;
     private Long teamId;
+    private Long userId;
     private Role role;
 
+    @Builder
     public TeamMember(Long userId, Long teamId, Role role) {
         this.userId = userId;
         this.teamId = teamId;
         this.role = role;
+    }
+
+    public static TeamMember createTeamMember(Long teamId, Long userId, Role role) {
+        return TeamMember.builder()
+                         .teamId(teamId)
+                         .userId(userId)
+                         .role(role)
+                         .build();
     }
 }
