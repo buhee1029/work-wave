@@ -12,12 +12,25 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class WorkflowService {
 
     private final TeamMemberRepository teamMemberRepository;
     private final WorkflowRepository workflowRepository;
+
+    @Transactional(readOnly = true)
+    public List<WorkflowResponse> getWorkflows(Long userId, Long teamId) {
+        checkTeamMember(teamId, userId);
+
+        return workflowRepository.findByTeamIdOrderByPosition(teamId)
+                .stream()
+                .map(WorkflowResponse::from)
+                .toList();
+    }
+
 
     @Transactional
     public WorkflowResponse createWorkflow(Long userId, Long teamId, WorkflowRequest request) {

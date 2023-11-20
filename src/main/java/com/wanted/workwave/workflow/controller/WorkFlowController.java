@@ -9,6 +9,8 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Tag(name = "워크플로우(칸반보드)")
 @RestController
 @RequestMapping("teams/{teamId}/workflows")
@@ -16,6 +18,13 @@ import org.springframework.web.bind.annotation.*;
 public class WorkFlowController {
 
     private final WorkflowService workflowService;
+
+    @GetMapping
+    public ApiResponse<List<WorkflowResponse>> getWorkflows(
+            @RequestAttribute Long userId,
+            @PathVariable Long teamId) {
+        return ApiResponse.ok(workflowService.getWorkflows(userId, teamId));
+    }
 
     @PostMapping
     public ApiResponse<WorkflowResponse> createWorkflow(
