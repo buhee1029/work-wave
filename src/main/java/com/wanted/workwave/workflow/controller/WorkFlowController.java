@@ -1,9 +1,8 @@
 package com.wanted.workwave.workflow.controller;
 
 import com.wanted.workwave.common.response.ApiResponse;
-import com.wanted.workwave.workflow.dto.WorkflowCreateRequest;
+import com.wanted.workwave.workflow.dto.WorkflowRequest;
 import com.wanted.workwave.workflow.dto.WorkflowResponse;
-import com.wanted.workwave.workflow.dto.WorkflowUpdateRequest;
 import com.wanted.workwave.workflow.service.WorkflowService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -12,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "워크플로우(칸반보드)")
 @RestController
-@RequestMapping("/workflows")
+@RequestMapping("teams/{teamId}/workflows")
 @RequiredArgsConstructor
 public class WorkFlowController {
 
@@ -21,23 +20,26 @@ public class WorkFlowController {
     @PostMapping
     public ApiResponse<WorkflowResponse> createWorkflow(
             @RequestAttribute Long userId,
-            @Valid @RequestBody WorkflowCreateRequest request) {
-        return ApiResponse.created(workflowService.createWorkflow(userId, request));
+            @PathVariable Long teamId,
+            @Valid @RequestBody WorkflowRequest request) {
+        return ApiResponse.created(workflowService.createWorkflow(userId, teamId, request));
     }
 
-    @PutMapping("/{workflow_id}")
+    @PutMapping("/{workflowId}")
     public ApiResponse<WorkflowResponse> updateWorkflow(
             @RequestAttribute Long userId,
-            @PathVariable("workflow_id") Long workflowId,
-            @Valid @RequestBody WorkflowUpdateRequest request) {
-        return ApiResponse.created(workflowService.updateWorkflow(userId, workflowId, request));
+            @PathVariable Long teamId,
+            @PathVariable Long workflowId,
+            @Valid @RequestBody WorkflowRequest request) {
+        return ApiResponse.created(workflowService.updateWorkflow(userId, teamId, workflowId, request));
     }
 
-    @DeleteMapping("/{workflow_id}")
+    @DeleteMapping("/{workflowId}")
     public ApiResponse<Void> deleteWorkflow(
             @RequestAttribute Long userId,
-            @PathVariable("workflow_id") Long workflowId) {
-        workflowService.deleteWorkflow(userId, workflowId);
+            @PathVariable Long teamId,
+            @PathVariable Long workflowId) {
+        workflowService.deleteWorkflow(userId, teamId, workflowId);
         return ApiResponse.noContent();
     }
 }

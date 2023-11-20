@@ -3,9 +3,9 @@ package com.wanted.workwave.workflow.service;
 import com.wanted.workwave.team.domain.repository.TeamMemberRepository;
 import com.wanted.workwave.workflow.domain.Workflow;
 import com.wanted.workwave.workflow.domain.WorkflowRepository;
-import com.wanted.workwave.workflow.dto.WorkflowCreateRequest;
+import com.wanted.workwave.workflow.dto.WorkflowRequest;
 import com.wanted.workwave.workflow.dto.WorkflowResponse;
-import com.wanted.workwave.workflow.dto.WorkflowUpdateRequest;
+import com.wanted.workwave.workflow.exception.MismatchedTeamWorkflowException;
 import com.wanted.workwave.workflow.exception.NotFoundWorkflowException;
 import com.wanted.workwave.workflow.exception.NotTeamMemberException;
 import lombok.RequiredArgsConstructor;
@@ -20,33 +20,41 @@ public class WorkflowService {
     private final WorkflowRepository workflowRepository;
 
     @Transactional
-    public WorkflowResponse createWorkflow(Long userId, WorkflowCreateRequest request) {
-        isTeamMember(request.getTeamId(), userId);
-        int newPosition = countWorkFlow(request.getTeamId()) + 1;
+    public WorkflowResponse createWorkflow(Long userId, Long teamId, WorkflowRequest request) {
+        checkTeamMember(teamId, userId);
+        int newPosition = countWorkFlow(teamId) + 1;
 
-        return WorkflowResponse.from(workflowRepository.save(request.toEntity(newPosition)));
+        return WorkflowResponse.from(workflowRepository.save(request.toEntity(teamId, newPosition)));
     }
 
     @Transactional
-    public WorkflowResponse updateWorkflow(Long userId, Long workflowId, WorkflowUpdateRequest request) {
+    public WorkflowResponse updateWorkflow(Long userId, Long teamId, Long workflowId, WorkflowRequest request) {
         Workflow workflow = findWorkflow(workflowId);
-        isTeamMember(workflow.getTeamId(), userId);
+        checkMatchTeamWorkflow(workflow.getTeamId(), teamId);
+        checkTeamMember(teamId, userId);
         workflow.changeWorkFlow(request);
 
         return WorkflowResponse.from(workflow);
     }
 
     @Transactional
-    public void deleteWorkflow(Long userId, Long workflowId) {
+    public void deleteWorkflow(Long userId, Long teamId, Long workflowId) {
         Workflow workflow = findWorkflow(workflowId);
-        isTeamMember(workflow.getTeamId(), userId);
+        checkMatchTeamWorkflow(workflow.getTeamId(), teamId);
+        checkTeamMember(teamId, userId);
         workflowRepository.delete(workflow);
     }
 
-    private void isTeamMember(Long teamId, Long userId) {
+    private void checkTeamMember(Long teamId, Long userId) {
         boolean isTeamMember = teamMemberRepository.existsByTeamIdAndUserId(teamId, userId);
         if (!isTeamMember) {
             throw new NotTeamMemberException();
+        }
+    }
+
+    public void checkMatchTeamWorkflow(Long teamId, Long checkTeamId) {
+        if (!teamId.equals(checkTeamId)) {
+            throw new MismatchedTeamWorkflowException();
         }
     }
 

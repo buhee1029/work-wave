@@ -3,7 +3,6 @@ package com.wanted.workwave.workflow.dto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.wanted.workwave.workflow.domain.Workflow;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,17 +10,13 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class WorkflowCreateRequest {
-
-    @JsonProperty("team_id")
-    @NotNull
-    private Long teamId;
+public class WorkflowRequest {
 
     @JsonProperty("workflow_name")
-    @NotBlank
+    @NotBlank(message = "워크플로우 이름을 입력해주세요.")
     private String workflowName;
 
-    public Workflow toEntity(int position) {
+    public Workflow toEntity(Long teamId, int position) {
         return Workflow.builder()
                 .teamId(teamId)
                 .name(workflowName)
