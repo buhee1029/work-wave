@@ -9,8 +9,10 @@ import com.wanted.workwave.team.exception.NotTeamLeaderException;
 import com.wanted.workwave.user.exception.DuplicateUsernameException;
 import com.wanted.workwave.user.exception.MismatchedPasswordException;
 import com.wanted.workwave.user.exception.NotFoundUsernameException;
+import com.wanted.workwave.workflow.exception.NotTeamMemberException;
 import java.util.Arrays;
 import java.util.List;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
@@ -28,7 +30,9 @@ public enum ErrorType {
     I001("I001", "팀장만 팀월을 초대할 수 있습니다.", NotTeamLeaderException.class, HttpStatus.NOT_FOUND),
     I002("I002", "존재하지 않는 초대입니다.", NotFoundTeamInviteException.class, HttpStatus.NOT_FOUND),
     I003("I003", "초대를 승낙할 수 없습니다.", InvalidInviteAccessException.class, HttpStatus.FORBIDDEN),
-    I004("I004", "이미 승인된 초대입니다.", AlreadyApprovedInviteException.class, HttpStatus.CONFLICT);
+    I004("I004", "이미 승인된 초대입니다.", AlreadyApprovedInviteException.class, HttpStatus.CONFLICT),
+
+    W001("W001", "팀 멤버에게만 접근 권한이 있습니다.",NotTeamMemberException.class, HttpStatus.FORBIDDEN);
 
     private final String code;
     private final String message;
