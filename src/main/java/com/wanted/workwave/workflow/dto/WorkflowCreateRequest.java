@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class WorkflowRequest {
+public class WorkflowCreateRequest {
 
     @JsonProperty("team_id")
     @NotNull

@@ -1,8 +1,9 @@
 package com.wanted.workwave.workflow.controller;
 
 import com.wanted.workwave.common.response.ApiResponse;
-import com.wanted.workwave.workflow.dto.WorkflowRequest;
+import com.wanted.workwave.workflow.dto.WorkflowCreateRequest;
 import com.wanted.workwave.workflow.dto.WorkflowResponse;
+import com.wanted.workwave.workflow.dto.WorkflowUpdateRequest;
 import com.wanted.workwave.workflow.service.WorkflowService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -20,7 +21,15 @@ public class WorkFlowController {
     @PostMapping
     public ApiResponse<WorkflowResponse> createWorkflow(
             @RequestAttribute Long userId,
-            @Valid @RequestBody WorkflowRequest request) {
+            @Valid @RequestBody WorkflowCreateRequest request) {
         return ApiResponse.created(workflowService.createWorkflow(userId, request));
+    }
+
+    @PutMapping("/{workflow_id}")
+    public ApiResponse<WorkflowResponse> updateWorkflow(
+            @RequestAttribute Long userId,
+            @PathVariable("workflow_id") Long workflowId,
+            @Valid @RequestBody WorkflowUpdateRequest request) {
+        return ApiResponse.created(workflowService.updateWorkflow(userId, workflowId, request));
     }
 }

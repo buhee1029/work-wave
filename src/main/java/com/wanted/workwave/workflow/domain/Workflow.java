@@ -1,5 +1,6 @@
 package com.wanted.workwave.workflow.domain;
 
+import com.wanted.workwave.workflow.dto.WorkflowUpdateRequest;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -23,5 +24,9 @@ public class Workflow {
         this.teamId = teamId;
         this.name = name;
         this.position = position;
+    }
+
+    public void changeWorkFlow(WorkflowUpdateRequest request) {
+        this.name = request.getWorkflowName();
     }
 }
