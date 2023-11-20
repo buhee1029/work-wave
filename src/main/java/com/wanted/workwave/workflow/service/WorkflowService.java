@@ -36,6 +36,13 @@ public class WorkflowService {
         return WorkflowResponse.from(workflow);
     }
 
+    @Transactional
+    public void deleteWorkflow(Long userId, Long workflowId) {
+        Workflow workflow = findWorkflow(workflowId);
+        isTeamMember(workflow.getTeamId(), userId);
+        workflowRepository.delete(workflow);
+    }
+
     private void isTeamMember(Long teamId, Long userId) {
         boolean isTeamMember = teamMemberRepository.existsByTeamIdAndUserId(teamId, userId);
         if (!isTeamMember) {

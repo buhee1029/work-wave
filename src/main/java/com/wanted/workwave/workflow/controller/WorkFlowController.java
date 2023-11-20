@@ -32,4 +32,12 @@ public class WorkFlowController {
             @Valid @RequestBody WorkflowUpdateRequest request) {
         return ApiResponse.created(workflowService.updateWorkflow(userId, workflowId, request));
     }
+
+    @DeleteMapping("/{workflow_id}")
+    public ApiResponse<Void> deleteWorkflow(
+            @RequestAttribute Long userId,
+            @PathVariable("workflow_id") Long workflowId) {
+        workflowService.deleteWorkflow(userId, workflowId);
+        return ApiResponse.noContent();
+    }
 }
