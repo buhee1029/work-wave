@@ -9,4 +9,7 @@ public interface WorkflowRepository extends JpaRepository<Workflow, Long> {
     List<Workflow> findByTeamIdOrderByPosition(Long teamId);
 
     int countByTeamId(Long teamId);
+
+    List<Workflow> findByTeamIdAndPositionBetween(Long teamId, int start, int end);
+
 }

@@ -43,6 +43,16 @@ public class WorkFlowController {
         return ApiResponse.created(workflowService.updateWorkflow(userId, teamId, workflowId, request));
     }
 
+    @PatchMapping("/{workflowId}/move/{newPosition}")
+    public ApiResponse<WorkflowResponse> moveWorkflow(
+            @RequestAttribute Long userId,
+            @PathVariable Long teamId,
+            @PathVariable Long workflowId,
+            @PathVariable int newPosition) {
+        workflowService.moveWorkflow(userId, teamId, workflowId, newPosition);
+        return ApiResponse.noContent();
+    }
+
     @DeleteMapping("/{workflowId}")
     public ApiResponse<Void> deleteWorkflow(
             @RequestAttribute Long userId,

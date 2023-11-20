@@ -26,7 +26,11 @@ public class Workflow {
         this.position = position;
     }
 
-    public void changeWorkFlow(WorkflowRequest request) {
+    public void changeWorkFlowInfo(WorkflowRequest request) {
         this.name = request.getWorkflowName();
+    }
+
+    public void changeWorkFlowPosition(int newPosition) {
+        this.position = newPosition;
     }
 }
