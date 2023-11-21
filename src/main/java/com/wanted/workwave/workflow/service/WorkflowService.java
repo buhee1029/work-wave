@@ -1,9 +1,13 @@
 package com.wanted.workwave.workflow.service;
 
 import com.wanted.workwave.team.domain.repository.TeamMemberRepository;
+import com.wanted.workwave.workflow.domain.entity.Work;
 import com.wanted.workwave.workflow.domain.entity.Workflow;
+import com.wanted.workwave.workflow.domain.repository.WorkRepository;
 import com.wanted.workwave.workflow.domain.repository.WorkflowRepository;
 import com.wanted.workwave.workflow.dto.request.WorkflowRequest;
+import com.wanted.workwave.workflow.dto.response.WorkResponse;
+import com.wanted.workwave.workflow.dto.response.WorkflowListResponse;
 import com.wanted.workwave.workflow.dto.response.WorkflowResponse;
 import com.wanted.workwave.workflow.exception.InvalidPositionException;
 import com.wanted.workwave.workflow.exception.MismatchedTeamWorkflowException;
@@ -13,23 +17,34 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class WorkflowService {
 
     private final TeamMemberRepository teamMemberRepository;
+    private final WorkRepository workRepository;
     private final WorkflowRepository workflowRepository;
 
     @Transactional(readOnly = true)
-    public List<WorkflowResponse> getWorkflows(Long userId, Long teamId) {
+    public List<WorkflowListResponse> getWorkflows(Long userId, Long teamId) {
         validateLoggedInUserIsTeamMember(teamId, userId);
 
-        return workflowRepository.findByTeamIdOrderByPosition(teamId)
-                .stream()
-                .map(WorkflowResponse::from)
-                .toList();
+        return workflowRepository
+                .findByTeamIdOrderByPosition(teamId).stream()
+                .map(workflow -> {
+                    List<WorkResponse> workResponses =
+                            workRepository.findByWorkflowId(workflow.getId())
+                                    .stream()
+                                    .map(WorkResponse::from)
+                                    .collect(Collectors.toList());
+
+                    return WorkflowListResponse.from(workflow, workResponses);
+                })
+                .collect(Collectors.toList());
     }
 
     @Transactional
@@ -53,7 +68,7 @@ public class WorkflowService {
     }
 
     @Transactional
-    public void moveWorkflow(Long userId, Long teamId, Long workflowId, int newPosition) {
+    public WorkflowResponse moveWorkflow(Long userId, Long teamId, Long workflowId, int newPosition) {
         Workflow workflow = findWorkflow(workflowId);
 
         validateMatchTeamWorkflow(workflow.getTeamId(), teamId);
@@ -67,6 +82,8 @@ public class WorkflowService {
             moveWorkflowsWithinRange(teamId, oldPosition, newPosition);
             workflow.changeWorkFlowPosition(newPosition);
         }
+
+        return WorkflowResponse.from(workflow);
     }
 
     @Transactional

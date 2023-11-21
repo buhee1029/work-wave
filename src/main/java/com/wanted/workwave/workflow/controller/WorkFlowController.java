@@ -2,6 +2,7 @@ package com.wanted.workwave.workflow.controller;
 
 import com.wanted.workwave.common.response.ApiResponse;
 import com.wanted.workwave.workflow.dto.request.WorkflowRequest;
+import com.wanted.workwave.workflow.dto.response.WorkflowListResponse;
 import com.wanted.workwave.workflow.dto.response.WorkflowResponse;
 import com.wanted.workwave.workflow.service.WorkflowService;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -20,7 +21,7 @@ public class WorkFlowController {
     private final WorkflowService workflowService;
 
     @GetMapping
-    public ApiResponse<List<WorkflowResponse>> getWorkflows(
+    public ApiResponse<List<WorkflowListResponse>> getWorkflows(
             @RequestAttribute Long userId,
             @PathVariable Long teamId) {
         return ApiResponse.ok(workflowService.getWorkflows(userId, teamId));
@@ -40,7 +41,7 @@ public class WorkFlowController {
             @PathVariable Long teamId,
             @PathVariable Long workflowId,
             @Valid @RequestBody WorkflowRequest request) {
-        return ApiResponse.created(workflowService.updateWorkflow(userId, teamId, workflowId, request));
+        return ApiResponse.ok(workflowService.updateWorkflow(userId, teamId, workflowId, request));
     }
 
     @PatchMapping("/{workflowId}/move/{newPosition}")
@@ -49,8 +50,7 @@ public class WorkFlowController {
             @PathVariable Long teamId,
             @PathVariable Long workflowId,
             @PathVariable int newPosition) {
-        workflowService.moveWorkflow(userId, teamId, workflowId, newPosition);
-        return ApiResponse.noContent();
+        return ApiResponse.ok(workflowService.moveWorkflow(userId, teamId, workflowId, newPosition));
     }
 
     @DeleteMapping("/{workflowId}")
