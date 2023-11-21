@@ -1,7 +1,7 @@
 package com.wanted.workwave.workflow.domain.entity;
 
 import com.wanted.workwave.workflow.domain.enums.Tag;
-import com.wanted.workwave.workflow.dto.WorkRequest;
+import com.wanted.workwave.workflow.dto.request.WorkRequest;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;

@@ -1,4 +1,4 @@
-package com.wanted.workwave.workflow.dto;
+package com.wanted.workwave.workflow.dto.request;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;

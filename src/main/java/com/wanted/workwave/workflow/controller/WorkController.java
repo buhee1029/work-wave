@@ -1,8 +1,8 @@
 package com.wanted.workwave.workflow.controller;
 
 import com.wanted.workwave.common.response.ApiResponse;
-import com.wanted.workwave.workflow.dto.WorkRequest;
-import com.wanted.workwave.workflow.dto.WorkResponse;
+import com.wanted.workwave.workflow.dto.request.WorkRequest;
+import com.wanted.workwave.workflow.dto.response.WorkResponse;
 import com.wanted.workwave.workflow.service.WorkService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
