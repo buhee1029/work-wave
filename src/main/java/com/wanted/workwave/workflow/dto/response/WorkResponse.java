@@ -7,7 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Getter
 @Builder
@@ -27,7 +27,7 @@ public class WorkResponse {
     private String title;
     private Tag tag;
     private double workload;
-    private LocalDateTime deadline;
+    private LocalDate deadline;
 
     public static WorkResponse from(Work work) {
         return WorkResponse.builder()

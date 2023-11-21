@@ -7,7 +7,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Entity
 @Getter
@@ -26,12 +26,12 @@ public class Work {
     @Enumerated(EnumType.STRING)
     private Tag tag;
     private double workload;
-    private LocalDateTime deadline;
+    private LocalDate deadline;
 
     @Builder
     public Work(
             Long workflowId, Long assigneeId, int position,
-            String title, Tag tag, double workload, LocalDateTime deadline) {
+            String title, Tag tag, double workload, LocalDate deadline) {
         this.workflowId = workflowId;
         this.assigneeId = assigneeId;
         this.position = position;
