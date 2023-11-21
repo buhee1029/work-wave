@@ -21,14 +21,19 @@ public class Work {
     private Long assigneeId;
     private int position;
     private String title;
+
+    @Enumerated(EnumType.STRING)
     private Tag tag;
     private double workload;
     private LocalDateTime deadline;
 
     @Builder
-    public Work(Long workflowId, Long assigneeId, String title, Tag tag, double workload, LocalDateTime deadline) {
+    public Work(
+            Long workflowId, Long assigneeId, int position,
+            String title, Tag tag, double workload, LocalDateTime deadline) {
         this.workflowId = workflowId;
         this.assigneeId = assigneeId;
+        this.position = position;
         this.title = title;
         this.tag = tag;
         this.workload = workload;
