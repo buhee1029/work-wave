@@ -1,4 +1,4 @@
-package com.wanted.workwave.workflow.domain;
+package com.wanted.workwave.workflow.domain.entity;
 
 import com.wanted.workwave.workflow.dto.WorkflowRequest;
 import jakarta.persistence.*;

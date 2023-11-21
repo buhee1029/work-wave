@@ -1,4 +1,4 @@
-package com.wanted.workwave.workflow.domain;
+package com.wanted.workwave.workflow.domain.enums;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.wanted.workwave.workflow.exception.InvalidTagException;

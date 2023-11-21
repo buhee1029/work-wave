@@ -1,5 +1,6 @@
-package com.wanted.workwave.workflow.domain;
+package com.wanted.workwave.workflow.domain.repository;
 
+import com.wanted.workwave.workflow.domain.entity.Workflow;
 import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 

@@ -1,8 +1,8 @@
 package com.wanted.workwave.workflow.service;
 
 import com.wanted.workwave.team.domain.repository.TeamMemberRepository;
-import com.wanted.workwave.workflow.domain.Workflow;
-import com.wanted.workwave.workflow.domain.WorkflowRepository;
+import com.wanted.workwave.workflow.domain.entity.Workflow;
+import com.wanted.workwave.workflow.domain.repository.WorkflowRepository;
 import com.wanted.workwave.workflow.dto.WorkflowRequest;
 import com.wanted.workwave.workflow.dto.WorkflowResponse;
 import com.wanted.workwave.workflow.exception.InvalidPositionException;
