@@ -9,10 +9,8 @@ import com.wanted.workwave.team.exception.NotTeamLeaderException;
 import com.wanted.workwave.user.exception.DuplicateUsernameException;
 import com.wanted.workwave.user.exception.MismatchedPasswordException;
 import com.wanted.workwave.user.exception.NotFoundUsernameException;
-import com.wanted.workwave.workflow.exception.InvalidPositionException;
-import com.wanted.workwave.workflow.exception.MismatchedTeamWorkflowException;
-import com.wanted.workwave.workflow.exception.NotFoundWorkflowException;
-import com.wanted.workwave.workflow.exception.NotTeamMemberException;
+import com.wanted.workwave.workflow.exception.*;
+
 import java.util.Arrays;
 import java.util.List;
 
@@ -35,10 +33,11 @@ public enum ErrorType {
     I003("I003", "초대를 승낙할 수 없습니다.", InvalidInviteAccessException.class, HttpStatus.FORBIDDEN),
     I004("I004", "이미 승인된 초대입니다.", AlreadyApprovedInviteException.class, HttpStatus.CONFLICT),
 
-    W001("W001", "팀 멤버에게만 접근 권한이 있습니다.",NotTeamMemberException.class, HttpStatus.FORBIDDEN),
+    W001("W001", "팀 멤버에게만 접근 권한이 있습니다.", NotTeamMemberException.class, HttpStatus.FORBIDDEN),
     W002("W002", "존재하지 않는 워크플로우 입니다.", NotFoundWorkflowException.class, HttpStatus.NOT_FOUND),
     W003("W003", "해당 팀의 워크플로우가 아닙니다.", MismatchedTeamWorkflowException.class, HttpStatus.NOT_FOUND),
-    W004("W005", "잘못된 이동할 위치입니다.", InvalidPositionException.class, HttpStatus.BAD_REQUEST);
+    W004("W004", "잘못된 이동할 위치입니다.", InvalidPositionException.class, HttpStatus.BAD_REQUEST),
+    W005("W005", "올바르지 않은 태그가 사용되었습니다.", InvalidTagException.class, HttpStatus.BAD_REQUEST);
 
     private final String code;
     private final String message;
@@ -48,8 +47,8 @@ public enum ErrorType {
 
     public static ErrorType of(Class<? extends CustomException> classType) {
         return errorTypes.stream()
-                         .filter(it -> it.classType.equals(classType))
-                         .findFirst()
-                         .orElseThrow(RuntimeException::new);
+                .filter(it -> it.classType.equals(classType))
+                .findFirst()
+                .orElseThrow(RuntimeException::new);
     }
 }
