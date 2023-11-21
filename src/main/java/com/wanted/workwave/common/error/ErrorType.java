@@ -33,11 +33,13 @@ public enum ErrorType {
     I003("I003", "초대를 승낙할 수 없습니다.", InvalidInviteAccessException.class, HttpStatus.FORBIDDEN),
     I004("I004", "이미 승인된 초대입니다.", AlreadyApprovedInviteException.class, HttpStatus.CONFLICT),
 
-    W001("W001", "팀 멤버에게만 접근 권한이 있습니다.", NotTeamMemberException.class, HttpStatus.FORBIDDEN),
+    W001("W001", "로그인한 유저가 해당 팀 멤버가 아닙니다.", NotLoggedInUserTeamMemberException.class, HttpStatus.FORBIDDEN),
     W002("W002", "존재하지 않는 워크플로우 입니다.", NotFoundWorkflowException.class, HttpStatus.NOT_FOUND),
     W003("W003", "해당 팀의 워크플로우가 아닙니다.", MismatchedTeamWorkflowException.class, HttpStatus.NOT_FOUND),
     W004("W004", "잘못된 이동할 위치입니다.", InvalidPositionException.class, HttpStatus.BAD_REQUEST),
-    W005("W005", "올바르지 않은 태그가 사용되었습니다.", InvalidTagException.class, HttpStatus.BAD_REQUEST);
+    W005("W005", "올바르지 않은 작업 태그가 사용되었습니다.", InvalidTagException.class, HttpStatus.BAD_REQUEST),
+    W006("W006", "존재하지 않는 작업 입니다.", NotFoundWorkException.class, HttpStatus.NOT_FOUND),
+    W007("W007", "할당하려는 유저가 팀 멤버가 아닙니다.", AssigneeNotTeamMemberException.class, HttpStatus.FORBIDDEN);
 
     private final String code;
     private final String message;

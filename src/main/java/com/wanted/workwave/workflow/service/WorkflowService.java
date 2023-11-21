@@ -8,7 +8,7 @@ import com.wanted.workwave.workflow.dto.WorkflowResponse;
 import com.wanted.workwave.workflow.exception.InvalidPositionException;
 import com.wanted.workwave.workflow.exception.MismatchedTeamWorkflowException;
 import com.wanted.workwave.workflow.exception.NotFoundWorkflowException;
-import com.wanted.workwave.workflow.exception.NotTeamMemberException;
+import com.wanted.workwave.workflow.exception.NotLoggedInUserTeamMemberException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,7 +24,7 @@ public class WorkflowService {
 
     @Transactional(readOnly = true)
     public List<WorkflowResponse> getWorkflows(Long userId, Long teamId) {
-        checkTeamMember(teamId, userId);
+        validateLoggedInUserIsTeamMember(teamId, userId);
 
         return workflowRepository.findByTeamIdOrderByPosition(teamId)
                 .stream()
@@ -34,7 +34,7 @@ public class WorkflowService {
 
     @Transactional
     public WorkflowResponse createWorkflow(Long userId, Long teamId, WorkflowRequest request) {
-        checkTeamMember(teamId, userId);
+        validateLoggedInUserIsTeamMember(teamId, userId);
         int newPosition = countWorkFlow(teamId) + 1;
 
         return WorkflowResponse.from(workflowRepository.save(request.toEntity(teamId, newPosition)));
@@ -43,8 +43,10 @@ public class WorkflowService {
     @Transactional
     public WorkflowResponse updateWorkflow(Long userId, Long teamId, Long workflowId, WorkflowRequest request) {
         Workflow workflow = findWorkflow(workflowId);
-        checkMatchTeamWorkflow(workflow.getTeamId(), teamId);
-        checkTeamMember(teamId, userId);
+
+        validateMatchTeamWorkflow(workflow.getTeamId(), teamId);
+        validateLoggedInUserIsTeamMember(teamId, userId);
+
         workflow.changeWorkFlowInfo(request);
 
         return WorkflowResponse.from(workflow);
@@ -53,8 +55,9 @@ public class WorkflowService {
     @Transactional
     public void moveWorkflow(Long userId, Long teamId, Long workflowId, int newPosition) {
         Workflow workflow = findWorkflow(workflowId);
-        checkMatchTeamWorkflow(workflow.getTeamId(), teamId);
-        checkTeamMember(teamId, userId);
+
+        validateMatchTeamWorkflow(workflow.getTeamId(), teamId);
+        validateLoggedInUserIsTeamMember(teamId, userId);
 
         int oldPosition = workflow.getPosition();
 
@@ -69,8 +72,10 @@ public class WorkflowService {
     @Transactional
     public void deleteWorkflow(Long userId, Long teamId, Long workflowId) {
         Workflow workflow = findWorkflow(workflowId);
-        checkMatchTeamWorkflow(workflow.getTeamId(), teamId);
-        checkTeamMember(teamId, userId);
+
+        validateMatchTeamWorkflow(workflow.getTeamId(), teamId);
+        validateLoggedInUserIsTeamMember(teamId, userId);
+
         workflowRepository.delete(workflow);
     }
 
@@ -78,16 +83,16 @@ public class WorkflowService {
         return workflowRepository.findById(workflowId).orElseThrow(NotFoundWorkflowException::new);
     }
 
-    public void checkMatchTeamWorkflow(Long teamId, Long checkTeamId) {
+    public void validateMatchTeamWorkflow(Long teamId, Long checkTeamId) {
         if (!teamId.equals(checkTeamId)) {
             throw new MismatchedTeamWorkflowException();
         }
     }
 
-    private void checkTeamMember(Long teamId, Long userId) {
+    private void validateLoggedInUserIsTeamMember(Long teamId, Long userId) {
         boolean isTeamMember = teamMemberRepository.existsByTeamIdAndUserId(teamId, userId);
         if (!isTeamMember) {
-            throw new NotTeamMemberException();
+            throw new NotLoggedInUserTeamMemberException();
         }
     }
 

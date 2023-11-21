@@ -1,6 +1,7 @@
 package com.wanted.workwave.workflow.domain.entity;
 
 import com.wanted.workwave.workflow.domain.enums.Tag;
+import com.wanted.workwave.workflow.dto.WorkRequest;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -38,5 +39,13 @@ public class Work {
         this.tag = tag;
         this.workload = workload;
         this.deadline = deadline;
+    }
+
+    public void changeWorkInfo(WorkRequest request) {
+        this.assigneeId = request.getAssigneeId();
+        this.title = request.getTitle();
+        this.tag = request.getTag();
+        this.workload = request.getWorkload();
+        this.deadline = request.getDeadline();
     }
 }

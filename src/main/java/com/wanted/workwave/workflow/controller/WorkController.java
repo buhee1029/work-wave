@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "작업(티켓)")
 @RestController
-@RequestMapping("/works")
+@RequestMapping("/workflows/{workflowId}/works")
 @RequiredArgsConstructor
 public class WorkController {
 
@@ -20,7 +20,17 @@ public class WorkController {
     @PostMapping
     public ApiResponse<WorkResponse> createWork(
             @RequestAttribute Long userId,
+            @PathVariable Long workflowId,
             @Valid @RequestBody WorkRequest request) {
-        return ApiResponse.created(workService.createWork(userId, request));
+        return ApiResponse.created(workService.createWork(userId, workflowId, request));
+    }
+
+    @PutMapping("/{workId}")
+    public ApiResponse<WorkResponse> updateWork(
+            @RequestAttribute Long userId,
+            @PathVariable Long workflowId,
+            @PathVariable Long workId,
+            @Valid @RequestBody WorkRequest request) {
+        return ApiResponse.created(workService.updateWork(userId, workflowId, workId, request));
     }
 }

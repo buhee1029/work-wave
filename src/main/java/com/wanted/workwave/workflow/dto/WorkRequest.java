@@ -15,9 +15,6 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class WorkRequest {
 
-    @JsonProperty("workflow_id")
-    private Long workflowId;
-
     @JsonProperty("assignee_id")
     private Long assigneeId;
 
@@ -28,7 +25,7 @@ public class WorkRequest {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
     private LocalDateTime deadline;
 
-    public Work toEntity(int position) {
+    public Work toEntity(Long workflowId, int position) {
         return Work.builder()
                 .workflowId(workflowId)
                 .assigneeId(assigneeId)

@@ -1,13 +1,16 @@
 package com.wanted.workwave.workflow.service;
 
 import com.wanted.workwave.team.domain.repository.TeamMemberRepository;
+import com.wanted.workwave.workflow.domain.entity.Work;
 import com.wanted.workwave.workflow.domain.entity.Workflow;
 import com.wanted.workwave.workflow.domain.repository.WorkRepository;
 import com.wanted.workwave.workflow.domain.repository.WorkflowRepository;
 import com.wanted.workwave.workflow.dto.WorkRequest;
 import com.wanted.workwave.workflow.dto.WorkResponse;
+import com.wanted.workwave.workflow.exception.AssigneeNotTeamMemberException;
+import com.wanted.workwave.workflow.exception.NotFoundWorkException;
 import com.wanted.workwave.workflow.exception.NotFoundWorkflowException;
-import com.wanted.workwave.workflow.exception.NotTeamMemberException;
+import com.wanted.workwave.workflow.exception.NotLoggedInUserTeamMemberException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,27 +24,49 @@ public class WorkService {
     private final WorkflowRepository workflowRepository;
 
     @Transactional
-    public WorkResponse createWork(Long userId, WorkRequest request) {
-        Long workflowId = request.getWorkflowId();
+    public WorkResponse createWork(Long userId, Long workflowId, WorkRequest request) {
         Workflow workflow = findWorkflow(workflowId);
 
-        Long teamId = workflow.getTeamId();
-        checkTeamMember(teamId, userId);
-        checkTeamMember(teamId, request.getAssigneeId());
+        validateLoggedInUserIsTeamMember(workflow.getTeamId(), userId);
+        validateAssigneeIsTeamMember(workflow.getTeamId(), request.getAssigneeId());
 
         int newPosition = countWork(workflowId) + 1;
 
-        return WorkResponse.from(workRepository.save(request.toEntity(newPosition)));
+        return WorkResponse.from(workRepository.save(request.toEntity(workflowId, newPosition)));
+    }
+
+    @Transactional
+    public WorkResponse updateWork(Long userId, Long workflowId, Long workId, WorkRequest request) {
+        Workflow workflow = findWorkflow(workflowId);
+
+        validateLoggedInUserIsTeamMember(workflow.getTeamId(), userId);
+        validateAssigneeIsTeamMember(workflow.getTeamId(), request.getAssigneeId());
+
+        Work work = findWork(workId);
+        work.changeWorkInfo(request);
+
+        return WorkResponse.from(work);
     }
 
     private Workflow findWorkflow(Long workflowId) {
         return workflowRepository.findById(workflowId).orElseThrow(NotFoundWorkflowException::new);
     }
 
-    private void checkTeamMember(Long teamId, Long userId) {
+    private Work findWork(Long workId) {
+        return workRepository.findById(workId).orElseThrow(NotFoundWorkException::new);
+    }
+
+    private void validateLoggedInUserIsTeamMember(Long teamId, Long userId) {
         boolean isTeamMember = teamMemberRepository.existsByTeamIdAndUserId(teamId, userId);
         if (!isTeamMember) {
-            throw new NotTeamMemberException();
+            throw new NotLoggedInUserTeamMemberException();
+        }
+    }
+
+    private void validateAssigneeIsTeamMember(Long teamId, Long assigneeId) {
+        boolean isTeamMember = teamMemberRepository.existsByTeamIdAndUserId(teamId, assigneeId);
+        if (!isTeamMember) {
+            throw new AssigneeNotTeamMemberException();
         }
     }
 
