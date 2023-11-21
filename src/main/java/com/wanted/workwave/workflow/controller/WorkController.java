@@ -33,4 +33,13 @@ public class WorkController {
             @Valid @RequestBody WorkRequest request) {
         return ApiResponse.created(workService.updateWork(userId, workflowId, workId, request));
     }
+
+    @DeleteMapping("/{workId}")
+    public ApiResponse<Void> deleteWork(
+            @RequestAttribute Long userId,
+            @PathVariable Long workflowId,
+            @PathVariable Long workId) {
+        workService.deleteWork(userId, workflowId, workId);
+        return ApiResponse.noContent();
+    }
 }

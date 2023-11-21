@@ -48,6 +48,15 @@ public class WorkService {
         return WorkResponse.from(work);
     }
 
+    @Transactional
+    public void deleteWork(Long userId, Long workflowId, Long workId) {
+        Workflow workflow = findWorkflow(workflowId);
+
+        validateLoggedInUserIsTeamMember(workflow.getTeamId(), userId);
+
+        workRepository.delete(findWork(workId));
+    }
+
     private Workflow findWorkflow(Long workflowId) {
         return workflowRepository.findById(workflowId).orElseThrow(NotFoundWorkflowException::new);
     }
