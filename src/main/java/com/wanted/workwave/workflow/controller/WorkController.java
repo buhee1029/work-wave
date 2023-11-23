@@ -1,6 +1,7 @@
 package com.wanted.workwave.workflow.controller;
 
 import com.wanted.workwave.common.response.ApiResponse;
+import com.wanted.workwave.workflow.dto.request.WorkMoveRequest;
 import com.wanted.workwave.workflow.dto.request.WorkRequest;
 import com.wanted.workwave.workflow.dto.response.WorkResponse;
 import com.wanted.workwave.workflow.service.WorkService;
@@ -31,7 +32,16 @@ public class WorkController {
             @PathVariable Long workflowId,
             @PathVariable Long workId,
             @Valid @RequestBody WorkRequest request) {
-        return ApiResponse.created(workService.updateWork(userId, workflowId, workId, request));
+        return ApiResponse.ok(workService.updateWork(userId, workflowId, workId, request));
+    }
+
+    @PatchMapping("/{workId}")
+    public ApiResponse<WorkResponse> moveWork(
+            @RequestAttribute Long userId,
+            @PathVariable Long workflowId,
+            @PathVariable Long workId,
+            @Valid @RequestBody WorkMoveRequest request) {
+        return ApiResponse.ok(workService.moveWork(userId, workflowId, workId, request));
     }
 
     @DeleteMapping("/{workId}")

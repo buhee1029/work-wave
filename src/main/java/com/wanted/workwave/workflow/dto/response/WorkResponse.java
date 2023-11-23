@@ -32,7 +32,7 @@ public class WorkResponse {
     public static WorkResponse from(Work work) {
         return WorkResponse.builder()
                 .workId(work.getId())
-                .workflowId(work.getId())
+                .workflowId(work.getWorkflowId())
                 .assigneeId(work.getAssigneeId())
                 .position(work.getPosition())
                 .title(work.getTitle())

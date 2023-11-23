@@ -1,7 +1,6 @@
 package com.wanted.workwave.workflow.service;
 
 import com.wanted.workwave.team.domain.repository.TeamMemberRepository;
-import com.wanted.workwave.workflow.domain.entity.Work;
 import com.wanted.workwave.workflow.domain.entity.Workflow;
 import com.wanted.workwave.workflow.domain.repository.WorkRepository;
 import com.wanted.workwave.workflow.domain.repository.WorkflowRepository;
@@ -17,7 +16,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -133,11 +131,11 @@ public class WorkflowService {
     }
 
     private void moveWorkflowsWithinRange(Long teamId, int start, int end) {
-        if (start > end) { // 현재 위치보다 높은 위치의 작업들을 한 칸씩 아래로 이동
+        if (start > end) { // 현재 위치보다 높은 위치의 열들을 한 칸씩 아래로 이동
             for (Workflow w : getWorkflowsInPositionRange(teamId, end, start - 1)) {
                 w.changeWorkFlowPosition(w.getPosition() + 1);
             }
-        } else { // 현재 위치보다 낮은 위치의 작업들을 한 칸씩 위로 이동
+        } else { // 현재 위치보다 낮은 위치의 열들을 한 칸씩 위로 이동
             for (Workflow w : getWorkflowsInPositionRange(teamId, start + 1, end)) {
                 w.changeWorkFlowPosition(w.getPosition() - 1);
             }

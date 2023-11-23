@@ -48,4 +48,13 @@ public class Work {
         this.workload = request.getWorkload();
         this.deadline = request.getDeadline();
     }
+
+    public void changeWorkflow(Long newWorkflowId) {
+        this.workflowId = newWorkflowId;
+    }
+
+    public void changePosition(int newPosition) {
+        this.position = newPosition;
+    }
+
 }

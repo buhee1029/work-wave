@@ -9,4 +9,8 @@ public interface WorkRepository extends JpaRepository<Work, Long> {
     List<Work> findByWorkflowId(Long workflowId);
 
     int countByWorkflowId(Long workflowId);
+
+    Work findTopByWorkflowIdOrderByPositionDesc(Long workflowId);
+
+    List<Work> findByWorkflowIdAndPositionBetween(Long workflowId, int start, int end);
 }
