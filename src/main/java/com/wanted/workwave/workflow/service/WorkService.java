@@ -98,7 +98,9 @@ public class WorkService {
 
         validateLoggedInUserIsTeamMember(workflow.getTeamId(), userId);
 
-        workRepository.delete(findWork(workId));
+        Work work = findWork(workId);
+        moveWorksWithinRange(workflowId, work.getPosition(), getMaxPositionForWorkflow(workflowId));
+        workRepository.delete(work);
     }
 
     private Workflow findWorkflow(Long workflowId) {
@@ -134,7 +136,7 @@ public class WorkService {
     }
 
     private int getMaxPositionForWorkflow(Long workflowId) {
-        return workRepository.findTopByWorkflowIdOrderByPositionDesc(workflowId).getPosition();
+        return workRepository.findTopByWorkflowIdOrderByPositionDesc(workflowId).map(Work::getPosition).orElse(1);
     }
 
     private List<Work> getWorksInPositionRange(Long workflowId, int start, int end) {

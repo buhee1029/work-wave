@@ -8,10 +8,7 @@ import com.wanted.workwave.workflow.dto.request.WorkflowRequest;
 import com.wanted.workwave.workflow.dto.response.WorkResponse;
 import com.wanted.workwave.workflow.dto.response.WorkflowListResponse;
 import com.wanted.workwave.workflow.dto.response.WorkflowResponse;
-import com.wanted.workwave.workflow.exception.InvalidPositionException;
-import com.wanted.workwave.workflow.exception.MismatchedTeamWorkflowException;
-import com.wanted.workwave.workflow.exception.NotFoundWorkflowException;
-import com.wanted.workwave.workflow.exception.NotLoggedInUserTeamMemberException;
+import com.wanted.workwave.workflow.exception.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,7 +32,7 @@ public class WorkflowService {
                 .findByTeamIdOrderByPosition(teamId).stream()
                 .map(workflow -> {
                     List<WorkResponse> workResponses =
-                            workRepository.findByWorkflowId(workflow.getId())
+                            workRepository.findByWorkflowIdOrderByPositionAsc(workflow.getId())
                                     .stream()
                                     .map(WorkResponse::from)
                                     .collect(Collectors.toList());
@@ -90,7 +87,9 @@ public class WorkflowService {
 
         validateMatchTeamWorkflow(workflow.getTeamId(), teamId);
         validateLoggedInUserIsTeamMember(teamId, userId);
+        validateWorkflowHasWorks(workflowId);
 
+        moveWorkflowsWithinRange(teamId, workflow.getPosition(), getMaxPositionForTeam(teamId));
         workflowRepository.delete(workflow);
     }
 
@@ -111,13 +110,19 @@ public class WorkflowService {
         }
     }
 
+    private void validateWorkflowHasWorks(Long workflowId) {
+        int count = workRepository.countByWorkflowId(workflowId);
+        if (count > 0) {
+            throw new WorkflowHasWorksException();
+        }
+    }
+
     private int countWorkFlow(Long teamId) {
         return workflowRepository.countByTeamId(teamId);
     }
 
     private int getMaxPositionForTeam(Long teamId) {
-        return workflowRepository.findTopByTeamIdOrderByPositionDesc(teamId).getPosition();
-
+        return workflowRepository.findTopByTeamIdOrderByPositionDesc(teamId).map(Workflow::getPosition).orElse(1);
     }
 
     private void validateNewPosition(int newPosition, int maxPosition) {

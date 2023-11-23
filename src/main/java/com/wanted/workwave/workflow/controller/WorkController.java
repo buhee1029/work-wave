@@ -35,7 +35,7 @@ public class WorkController {
         return ApiResponse.ok(workService.updateWork(userId, workflowId, workId, request));
     }
 
-    @PatchMapping("/{workId}")
+    @PatchMapping("/{workId}/move")
     public ApiResponse<WorkResponse> moveWork(
             @RequestAttribute Long userId,
             @PathVariable Long workflowId,
