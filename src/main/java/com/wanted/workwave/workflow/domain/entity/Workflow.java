@@ -1,6 +1,6 @@
-package com.wanted.workwave.workflow.domain;
+package com.wanted.workwave.workflow.domain.entity;
 
-import com.wanted.workwave.workflow.dto.WorkflowRequest;
+import com.wanted.workwave.workflow.dto.request.WorkflowRequest;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;

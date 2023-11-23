@@ -1,7 +1,7 @@
-package com.wanted.workwave.workflow.dto;
+package com.wanted.workwave.workflow.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.wanted.workwave.workflow.domain.Workflow;
+import com.wanted.workwave.workflow.domain.entity.Workflow;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
