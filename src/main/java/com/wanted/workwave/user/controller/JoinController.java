@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Tag(name = "회원가입")
 @RestController
-@RequestMapping("/join")
+@RequestMapping("/api/join")
 public class JoinController {
 
     private final JoinService joinService;

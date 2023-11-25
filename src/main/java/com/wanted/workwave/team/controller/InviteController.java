@@ -10,15 +10,15 @@ import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@Tag(name = "초대 승인")
+@Tag(name = "초대 수락")
 @RestController
-@RequestMapping("/invites")
+@RequestMapping("/api/invites")
 @RequiredArgsConstructor
 public class InviteController {
 
     private final TeamService teamService;
 
-    @PostMapping("/{inviteId}/approve")
+    @PostMapping("/{inviteId}/accept")
     public ApiResponse<Void>approveInvite(
             @RequestAttribute Long userId,
             @PathVariable Long inviteId) {
