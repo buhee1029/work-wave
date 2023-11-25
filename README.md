@@ -40,37 +40,17 @@
 <br/>
 
 ## API 명세
-#### 사용자
 
-| Action | Verbs  | URL Pattern |
-|:------:|--------|:-----------:|
-|  회원가입  | POST   |    /join    |
-|  로그인   | POST   |   /login    |
-
-#### 팀
-| Action  | Verbs |        URL Pattern         |
-|:-------:|:-----:|:--------------------------:|
-|  팀 생성   | POST  |           /teams           |
-|  팀원 초대  | POST  |   /teams/{teamId}/invite   |
-|  초대 승인  | POST  | /invites/{inviteId}/accept |
-
-#### 워크플로우(칸반보드)
-|   Action   | Verbs  |                 URL Pattern                  |
-|:----------:|:------:|----------------------------------------------|
-| 칸반보드 전체 조회 |  GET   |          /teams/{teamId}/workflows           |
-|  칸반보드 추가   |  POST  |          /teams/{teamId}/workflows           |
-|  칸반보드 수정   |  PUT   |    /teams/{teamId}/workflows/{workflowId}    |
-|  칸반보드 이동   | PATCH  | /teams/{teamId}/workflows/move/{newPosition} |
-|  칸반보드 삭제   | DELETE | /teams/{teamId}/workflows/{workflowId}       |
-
-#### 작업(티켓)
-| Action |  Verbs  | URL Pattern                                 |
-|:------:|:-------:|---------------------------------------------|
-| 작업 추가  |  POST   | /workflows/{workflowId}/works               |
-| 작업 수정  |   PUT   | /workflows/{workflowId}/works/{workId}      |
-| 작업 이동  |  PATCH  | /workflows/{workflowId}/works/{workId}/move |
-| 작업 삭제  | DELETE  | /workflows/{workflowId}/works{workId}       |
+<img src = "images/api.png"/>
 
 <br/>
+
+## 이슈 및 해결
+
+- [API 설계 시 고민]()
+- [칸반보드 열, 티켓 이동 알고리즘]()
+
+<br/>
+
 
 ---
